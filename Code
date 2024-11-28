@@ -1,0 +1,54 @@
+import java.util.Random;
+
+public class MontyHallSimulation {
+
+    public static int simulateMontyHall(boolean switchDoors, int numRuns) {
+        int wins = 0;
+        Random random = new Random();
+
+        for (int i = 0; i < numRuns; i++) {
+            //randomly place the car behind one of the three doors
+            int carDoor = random.nextInt(3) + 1;
+            //randomly pick one of the doors
+            int contestantChoice = random.nextInt(3) + 1;
+
+            //open one of the remaining doors that does not have the car
+            int hostOpens = -1;
+            for (int door = 1; door <= 3; door++) {
+                if (door != contestantChoice && door != carDoor) {
+                    hostOpens = door;
+                    break;
+                }
+            }
+
+            if (switchDoors) {
+                //If the contestant switches, they choose the door that was not picked or opened by the host
+                for (int door = 1; door <= 3; door++) {
+                    if (door != contestantChoice && door != hostOpens) {
+                        contestantChoice = door;
+                        break;
+                    }
+                }
+            }
+
+            //Check if the contestant wins the car
+            if (contestantChoice == carDoor) {
+                wins++;
+            }
+        }
+
+        return wins;
+    }
+
+    public static void main(String[] args) {
+        int numRuns = 5000;
+
+        //Test: contestant switches doors
+        int winsWhenSwitching = simulateMontyHall(true, numRuns);
+        System.out.println("Wins when switching: " + winsWhenSwitching);
+
+        //Test: contestant does not switch doors
+        int winsWhenNotSwitching = simulateMontyHall(false, numRuns);
+        System.out.println("Wins when not switching: " + winsWhenNotSwitching);
+    }
+}
